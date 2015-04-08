@@ -27,4 +27,24 @@ public class NoValueException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
+    public NoValueException() {
+        super();
+    }
+
+    public NoValueException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public NoValueException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NoValueException(String message) {
+        super(message);
+    }
+
+    public NoValueException(Throwable cause) {
+        super(cause);
+    }
+
 }
