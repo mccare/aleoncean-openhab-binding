@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openhab.binding.aleoncean.internal.ActionIn;
+import org.openhab.binding.aleoncean.internal.converter.paramcitemc.OpenClosedContactItem;
 import org.openhab.binding.aleoncean.internal.converter.paramcitemc.RockerSwitchActionRollerShutterItem;
 import org.openhab.binding.aleoncean.internal.converter.paramctypec.BooleanOnOffType;
 import org.openhab.binding.aleoncean.internal.converter.paramctypec.BooleanUpDownType;
@@ -78,6 +79,8 @@ public class ConverterFactory {
     static {
         final List<Class<? extends ParameterClassItemClassConverter>> list = new LinkedList<>();
 
+        list.add(OpenClosedContactItem.class);
+
         list.add(RockerSwitchActionRollerShutterItem.class);
 
         PARAMCITEMC = Collections.unmodifiableList(list);
@@ -113,9 +116,9 @@ public class ConverterFactory {
     }
 
     private static Object getConverterStaticField(final Class<? extends StandardConverter> converterClass,
-                                                  final String fieldName) {
+            final String fieldName) {
         try {
-            final Field field = converterClass.getField(FIELD_STATE_TYPE_CLASS);
+            final Field field = converterClass.getField(fieldName);
             return field.get(null);
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             return null;
@@ -150,33 +153,33 @@ public class ConverterFactory {
     }
 
     private static boolean checkParameter(final Class<? extends StandardConverter> converterClass,
-                                          final DeviceParameter parameter) {
+            final DeviceParameter parameter) {
         final DeviceParameter converterParameter = getConverterParameter(converterClass);
         return converterParameter.equals(parameter);
     }
 
     private static boolean checkParameterClass(final Class<? extends StandardConverter> converterClass,
-                                               final Class<?> parameterClass) {
+            final Class<?> parameterClass) {
         final Class<?> converterParameterClass = getConverterParameterClass(converterClass);
         return converterParameterClass.equals(parameterClass);
     }
 
     private static boolean checkItemClass(final Class<? extends StandardConverter> converterClass,
-                                          final Class<? extends Item> itemClass) {
+            final Class<? extends Item> itemClass) {
         final Class<? extends Item> converterItemClass = getConverterItem(converterClass);
         return converterItemClass.equals(itemClass);
     }
 
     private static boolean checkTypeClass(final Class<? extends StandardConverter> converterClass,
-                                          final List<Class<? extends State>> acceptedDataTypes,
-                                          final List<Class<? extends Command>> acceptedCommandTypes) {
+            final List<Class<? extends State>> acceptedDataTypes,
+            final List<Class<? extends Command>> acceptedCommandTypes) {
         final Class<? extends State> stateTypeClass = getConverterStateType(converterClass);
         final Class<? extends Command> commandTypeClass = getConverterCommandType(converterClass);
         return acceptedDataTypes.contains(stateTypeClass) && acceptedCommandTypes.contains(commandTypeClass);
     }
 
     private static boolean checkConvParam(final Class<? extends StandardConverter> converterClass,
-                                          final String convParam) {
+            final String convParam) {
         if (convParam == null) {
             return true;
         }
@@ -204,10 +207,8 @@ public class ConverterFactory {
      *         returned.
      */
     public static Class<? extends StandardConverter> getConverterClass(final DeviceParameter parameter,
-                                                                       final Class<? extends Item> itemClass,
-                                                                       final List<Class<? extends State>> acceptedDataTypes,
-                                                                       final List<Class<? extends Command>> acceptedCommandTypes,
-                                                                       final String convParam) {
+            final Class<? extends Item> itemClass, final List<Class<? extends State>> acceptedDataTypes,
+            final List<Class<? extends Command>> acceptedCommandTypes, final String convParam) {
         final Class<?> parameterClass;
         try {
             parameterClass = DeviceParameter.getSupportedClass(parameter);
@@ -250,7 +251,7 @@ public class ConverterFactory {
     }
 
     public static StandardConverter createFromClass(final Class<? extends StandardConverter> clazz,
-                                                    final ActionIn actionIn) {
+            final ActionIn actionIn) {
         Constructor<? extends StandardConverter> constructor;
         try {
             constructor = clazz.getConstructor(ActionIn.class);
