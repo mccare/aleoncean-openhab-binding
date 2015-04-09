@@ -24,12 +24,20 @@
 
     <packaging>eclipse-plugin</packaging>
 
+    <repositories>
+        <repository>
+            <id>aleoncean-p2</id>
+            <url>http://albs.aleon.eu:8082/p2/66CFBE52-1628-4A40-8089-DAF7E807BC98/</url>
+            <layout>p2</layout>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
-                <!-- <version>0.19.0</version> -->
+                <version>0.19.0</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
