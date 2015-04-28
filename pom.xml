@@ -31,6 +31,11 @@
             <url>http://albs.aleon.eu:8082/p2/66CFBE52-1628-4A40-8089-DAF7E807BC98/</url>
             <layout>p2</layout>
         </repository>
+        <repository>
+            <id>openhab-v1.6.2</id>
+            <url>http://albs.aleon.eu:8082/p2/78712A60-C93D-4D6E-AA5F-D83011063E1D/</url>
+            <layout>p2</layout>
+        </repository>
     </repositories>
 
     <build>
