@@ -19,7 +19,7 @@
 
     <groupId>org.openhab.binding</groupId>
     <artifactId>org.openhab.binding.aleoncean</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 
     <name>openHAB aleoncean Binding</name>
 
