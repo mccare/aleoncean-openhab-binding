@@ -4,147 +4,17 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.openhab.bundles</groupId>
-        <artifactId>binding</artifactId>
-        <version>1.6.2</version>
-    </parent>
-
-    <properties>
-        <bundle.symbolicName>org.openhab.binding.aleoncean</bundle.symbolicName>
-        <bundle.namespace>org.openhab.binding.aleoncean</bundle.namespace>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-    </properties>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
 
     <groupId>org.openhab.binding</groupId>
     <artifactId>org.openhab.binding.aleoncean</artifactId>
     <version>1.7.2-SNAPSHOT</version>
+    <packaging>bundle</packaging>
 
     <name>openHAB aleoncean Binding</name>
 
-    <packaging>eclipse-plugin</packaging>
-
-    <repositories>
-        <repository>
-            <id>aleoncean-p2</id>
-            <url>http://albs.aleon.eu:8082/p2/66CFBE52-1628-4A40-8089-DAF7E807BC98/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>openhab-v1.6.2</id>
-            <url>http://albs.aleon.eu:8082/p2/78712A60-C93D-4D6E-AA5F-D83011063E1D/</url>
-            <layout>p2</layout>
-        </repository>
-    </repositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-compiler-plugin</artifactId>
-                <version>0.19.0</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
-            </plugin>
-
-            <!-- We use the 'target-platform-configuration' to bind the targetplatform version to the parent version... -->
-            <plugin>
-              <groupId>org.eclipse.tycho</groupId>
-              <artifactId>target-platform-configuration</artifactId>
-              <version>0.19.0</version>
-              <configuration>
-                <resolver>p2</resolver>
-                <ignoreTychoRepositories>true</ignoreTychoRepositories>
-                <pomDependencies>consider</pomDependencies>
-                <target>
-                  <artifact>
-                    <groupId>org.openhab</groupId>
-                    <artifactId>targetplatform</artifactId>
-                    <version>1.6.2</version>
-                    <classifier>openhab</classifier>
-                  </artifact>
-                </target>
-                <environments>
-                  <environment>
-                    <os>linux</os>
-                    <ws>gtk</ws>
-                    <arch>x86</arch>
-                  </environment>
-                  <environment>
-                    <os>linux</os>
-                    <ws>gtk</ws>
-                    <arch>x86_64</arch>
-                  </environment>
-                  <environment>
-                    <os>win32</os>
-                    <ws>win32</ws>
-                    <arch>x86</arch>
-                  </environment>
-                  <environment>
-                    <os>macosx</os>
-                    <ws>cocoa</ws>
-                    <arch>x86_64</arch>
-                  </environment>
-                </environments>
-              </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-
-<!--
-     The dependencies should be comment out, if you use the normal build setup.
-     They are checked, so NetBeans could resolve the dependencies, too.
--->
-<!--
-    <dependencies>
-        <dependency>
-            <groupId>org.openhab.core</groupId>
-            <artifactId>org.openhab.core</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>eu.aleon</groupId>
-            <artifactId>aleoncean</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.openhab.model</groupId>
-            <artifactId>org.openhab.model.item</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.openhab.core</groupId>
-            <artifactId>org.openhab.core.library</artifactId>
-            <version>1.6.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.birt.runtime</groupId>
-            <artifactId>org.eclipse.osgi.services</artifactId>
-            <version>3.3.100.v20120522-1822</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.birt.runtime</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-            <version>3.8.2.v20130124-134944</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
--->
     <licenses>
         <license>
             <name>Eclipse Public License, Version 1.0</name>
@@ -157,13 +27,12 @@
         <name>aleon GmbH</name>
         <url>https://www.aleon.eu</url>
     </organization>
-  
+
     <developers>
         <developer>
             <id>maggu2810</id>
             <name>Markus Rathgeb</name>
             <email>maggu2810@gmail.com</email>
-            <!--<url></url>-->
             <organization>aleon GmbH</organization>
             <organizationUrl>https://www.aleon.eu</organizationUrl>
             <roles>
@@ -171,30 +40,150 @@
                 <role>developer</role>
             </roles>
             <timezone>Europe/Berlin</timezone>
-            <properties>
-                <!--<picUrl></picUrl>-->
-                <!--<gtalk></gtalk>-->
-            </properties>
         </developer>
     </developers>
 
-    <!--
-        <contributors>
-            <contributor>
-                <name></name>
-                <email></email>
-                <url></url>
-                <organization></organization>
-                <organizationUrl></organizationUrl>
-                <roles>
-                    <role>tester</role>
-                </roles>
-                <timezone></timezone>
-                <properties>
-                    <gtalk></gtalk>
-                </properties>
-            </contributor>
-        </contributors>
-    -->
+    <properties>
+        <bundle.symbolicName>org.openhab.binding.aleoncean</bundle.symbolicName>
+        <bundle.namespace>org.openhab.binding.aleoncean</bundle.namespace>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
+
+        <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
+        <!-- TODO: do not use 2.5.4 (https://issues.apache.org/jira/browse/FELIX-4874); wait for 2.5.5 -->
+        <maven.bundle.plugin.version>2.5.3</maven.bundle.plugin.version>
+
+        <oh1.version>1.8.0-SNAPSHOT</oh1.version>
+        <aleoncean.version>1.7-SNAPSHOT</aleoncean.version>
+
+        <!-- added for OSGi in general -->
+        <dep.osgi.core.groupId>org.osgi</dep.osgi.core.groupId>
+        <dep.osgi.core.artifactId>org.osgi.core</dep.osgi.core.artifactId>
+        <dep.osgi.core.version>6.0.0</dep.osgi.core.version>
+        <dep.osgi.compendium.groupId>org.osgi</dep.osgi.compendium.groupId>
+        <dep.osgi.compendium.artifactId>org.osgi.compendium</dep.osgi.compendium.artifactId>
+        <dep.osgi.compendium.version>5.0.0</dep.osgi.compendium.version>
+
+        <!-- provided by Karaf -->
+        <dep.slf4j.api.groupId>org.slf4j</dep.slf4j.api.groupId>
+        <dep.slf4j.api.artifactId>slf4j-api</dep.slf4j.api.artifactId>
+        <dep.slf4j.api.version>1.7.7</dep.slf4j.api.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${dep.osgi.core.groupId}</groupId>
+            <artifactId>${dep.osgi.core.artifactId}</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${dep.osgi.compendium.groupId}</groupId>
+            <artifactId>${dep.osgi.compendium.artifactId}</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${dep.slf4j.api.groupId}</groupId>
+            <artifactId>${dep.slf4j.api.artifactId}</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.aleon</groupId>
+            <artifactId>aleoncean</artifactId>
+            <version>${aleoncean.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openhab.core</groupId>
+            <artifactId>org.openhab.core</artifactId>
+            <version>${oh1.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhab.model</groupId>
+            <artifactId>org.openhab.model.item</artifactId>
+            <version>${oh1.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhab.core</groupId>
+            <artifactId>org.openhab.core.library</artifactId>
+            <version>${oh1.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${dep.osgi.core.groupId}</groupId>
+                <artifactId>${dep.osgi.core.artifactId}</artifactId>
+                <version>${dep.osgi.core.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>${dep.osgi.compendium.groupId}</groupId>
+                <artifactId>${dep.osgi.compendium.artifactId}</artifactId>
+                <version>${dep.osgi.compendium.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <artifactId>${dep.slf4j.api.artifactId}</artifactId>
+                <groupId>${dep.slf4j.api.groupId}</groupId>
+                <version>${dep.slf4j.api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${maven.bundle.plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <instructions>
+                            <_dsannotations>*</_dsannotations>
+                        </instructions>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>openhab.repository.snapshot</id>
+            <name>openHAB 1.x Snapshots</name>
+            <url>http://oss.jfrog.org/artifactory/libs-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

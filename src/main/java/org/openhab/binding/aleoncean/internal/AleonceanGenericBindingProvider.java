@@ -20,6 +20,8 @@ import org.openhab.core.items.GroupItem;
 import org.openhab.core.items.Item;
 import org.openhab.model.item.binding.AbstractGenericBindingProvider;
 import org.openhab.model.item.binding.BindingConfigParseException;
+import org.openhab.model.item.binding.BindingConfigReader;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,10 @@ import org.slf4j.LoggerFactory;
  * @author Markus Rathgeb <maggu2810@gmail.com>
  * @since 1.6.0
  */
+@Component(
+        name = "org.openhab.binding.aleoncean.genericbindingprovider",
+        service = {BindingConfigReader.class, AleonceanBindingProvider.class}
+)
 public class AleonceanGenericBindingProvider extends AbstractGenericBindingProvider implements AleonceanBindingProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AleonceanGenericBindingProvider.class);

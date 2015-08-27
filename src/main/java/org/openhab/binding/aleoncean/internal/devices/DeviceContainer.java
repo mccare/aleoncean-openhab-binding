@@ -43,8 +43,9 @@ import eu.aleon.aleoncean.rxtx.ESP3Connector;
  */
 public class DeviceContainer implements DeviceParameterUpdatedListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceContainer.class);
+    private static final String MSG_NO_EVENT_PUBLISHER = "No event publisher set.";
 
+    private final Logger LOGGER = LoggerFactory.getLogger(DeviceContainer.class);
     private final SortedMap<Integer, Device> devices = new TreeMap<>();
     private final SortedMap<String, ItemInfo> itemNameInfos = new TreeMap<>();
     private final SortedMap<Device, List<String>> deviceToItemNames = new TreeMap<>();
@@ -272,6 +273,11 @@ public class DeviceContainer implements DeviceParameterUpdatedListener {
     }
 
     public void handleReceivedCommand(final String itemName, final Command command) {
+        if (eventPublisher == null) {
+            LOGGER.info(MSG_NO_EVENT_PUBLISHER);
+            return;
+        }
+
         final ItemInfo itemInfo = getItemInfoForItemName(itemName);
         if (itemInfo != null) {
             final StandardConverter converter = itemInfo.getConverter();
@@ -280,6 +286,11 @@ public class DeviceContainer implements DeviceParameterUpdatedListener {
     }
 
     public void handleReceivedState(final String itemName, final State state) {
+        if (eventPublisher == null) {
+            LOGGER.info(MSG_NO_EVENT_PUBLISHER);
+            return;
+        }
+
         final ItemInfo itemInfo = getItemInfoForItemName(itemName);
         if (itemInfo != null) {
             final StandardConverter converter = itemInfo.getConverter();
@@ -288,6 +299,11 @@ public class DeviceContainer implements DeviceParameterUpdatedListener {
     }
 
     private void publishParameter(final String itemName, final ItemInfo itemInfo, final Object value) {
+        if (eventPublisher == null) {
+            LOGGER.info(MSG_NO_EVENT_PUBLISHER);
+            return;
+        }
+
         final StandardConverter converter = itemInfo.getConverter();
         converter.parameterFromDevice(eventPublisher, itemName, itemInfo, value);
     }

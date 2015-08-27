@@ -39,22 +39,35 @@ import org.osgi.service.cm.ManagedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.aleon.aleoncean.packet.EnOceanId;
+import org.osgi.service.event.EventHandler;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
- * Implement this class if you are going create an actively polling service like
- * querying a Website/Device.
+ * Implement this class if you are going create an actively polling service like querying a Website/Device.
  *
  * @author Markus Rathgeb <maggu2810@gmail.com>
  * @since 1.6.0
  */
+@Component(
+        immediate = true,
+        name = "org.openhab.binding.aleoncean.binding",
+        service = {EventHandler.class, ManagedService.class},
+        property = {
+            "service.pid:String=org.openhab.aleoncean",
+            "event.topics:String=openhab/command/*"
+        }
+)
 public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> implements ManagedService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AleonceanBinding.class);
-
     private static final String CONFIG_PORT = "port";
-
     private static final String CONFIG_BASEID = "baseid";
 
+    private final Logger LOGGER = LoggerFactory.getLogger(AleonceanBinding.class);
     private final Worker worker;
 
     public AleonceanBinding() {
@@ -73,9 +86,10 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
     }
 
     @Override
+    @Activate
     public void activate() {
         worker.start();
-        setEventPublisher(eventPublisher);
+        setEventPublisherRef(eventPublisher);
         for (final BindingProvider p : providers) {
             if (p instanceof AleonceanGenericBindingProvider) {
                 notifyWorkerAllBindingsChanged((AleonceanGenericBindingProvider) p);
@@ -84,6 +98,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
     }
 
     @Override
+    @Deactivate
     public void deactivate() {
         // deallocate resources here that are no longer needed and
         // should be reset when activating this binding again
@@ -170,15 +185,15 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
         }
     }
 
-    @Override
-    public void addBindingProvider(final AleonceanBindingProvider provider) {
+    @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.AT_LEAST_ONE, unbind = "removeBindingProviderRef",
+            name = "AleonceanBindingProvider")
+    public void addBindingProviderRef(final AleonceanBindingProvider provider) {
         LOGGER.debug("addBindingProvider({})", provider);
         super.addBindingProvider(provider);
         LOGGER.debug("addBindingProvider(...) done");
     }
 
-    @Override
-    public void removeBindingProvider(final AleonceanBindingProvider provider) {
+    public void removeBindingProviderRef(final AleonceanBindingProvider provider) {
         LOGGER.debug("removeBindingProvider({})", provider);
         super.removeBindingProvider(provider);
         LOGGER.debug("removeBindingProvider(...) done");
@@ -215,8 +230,9 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
         LOGGER.debug("allBindingsChanged(...) done");
     }
 
-    @Override
-    public void setEventPublisher(final EventPublisher eventPublisher) {
+    @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY, unbind = "unsetEventPublisherRef",
+            name = "EventPublisher")
+    public void setEventPublisherRef(final EventPublisher eventPublisher) {
         super.setEventPublisher(eventPublisher);
 
         final WorkerReply reply = worker.addAndWaitForReply(new WorkerItemSetEventPublisher(eventPublisher, true), 1, TimeUnit.MINUTES);
@@ -225,8 +241,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
         }
     }
 
-    @Override
-    public void unsetEventPublisher(final EventPublisher eventPublisher) {
+    public void unsetEventPublisherRef(final EventPublisher eventPublisher) {
         super.unsetEventPublisher(eventPublisher);
 
         final WorkerReply reply = worker.addAndWaitForReply(new WorkerItemSetEventPublisher(eventPublisher, false), 1, TimeUnit.MINUTES);
