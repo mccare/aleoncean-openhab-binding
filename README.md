@@ -5,6 +5,9 @@ aleoncean openHAB v1.x binding
 
 # Release
 
+This information is out of date and must be updated.
+__We are not using the tycho plugin anymore.__
+
 ```sh
 # There should be no changed stuff
 git status
