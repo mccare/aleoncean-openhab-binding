@@ -15,10 +15,10 @@
  */
 package org.openhab.binding.aleoncean.internal;
 
+import eu.aleon.aleoncean.packet.EnOceanId;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang.StringUtils;
 import org.openhab.binding.aleoncean.AleonceanBindingProvider;
 import org.openhab.binding.aleoncean.internal.worker.Worker;
 import org.openhab.binding.aleoncean.internal.worker.WorkerItemBindingChanged;
@@ -36,16 +36,15 @@ import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import eu.aleon.aleoncean.packet.EnOceanId;
-import org.osgi.service.event.EventHandler;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.event.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implement this class if you are going create an actively polling service like querying a Website/Device.
@@ -147,7 +146,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
              * Set the ESP3 port.
              */
             final String valuePort = (String) config.get(CONFIG_PORT);
-            if (StringUtils.isBlank(valuePort)) {
+            if (valuePort == null || valuePort.trim().length() == 0) {
                 LOGGER.warn("You need to setup the port that should be used for the ESP3 interface.");
                 return;
             }
@@ -162,7 +161,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
              * Set the base ID if entry is available.
              */
             final String valueBaseId = (String) config.get(CONFIG_BASEID);
-            if (StringUtils.isNotBlank(valueBaseId)) {
+            if (valueBaseId != null && valueBaseId.trim().length() > 0) {
                 try {
                     final EnOceanId baseId = new EnOceanId(valueBaseId);
                     reply = worker.addAndWaitForReply(new WorkerItemSetBaseId(baseId), 1, TimeUnit.MINUTES);
@@ -186,7 +185,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
     }
 
     @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.AT_LEAST_ONE, unbind = "removeBindingProviderRef",
-            name = "AleonceanBindingProvider")
+               name = "AleonceanBindingProvider")
     public void addBindingProviderRef(final AleonceanBindingProvider provider) {
         LOGGER.debug("addBindingProvider({})", provider);
         super.addBindingProvider(provider);
@@ -231,7 +230,7 @@ public class AleonceanBinding extends AbstractBinding<AleonceanBindingProvider> 
     }
 
     @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.MANDATORY, unbind = "unsetEventPublisherRef",
-            name = "EventPublisher")
+               name = "EventPublisher")
     public void setEventPublisherRef(final EventPublisher eventPublisher) {
         super.setEventPublisher(eventPublisher);
 
