@@ -16,9 +16,11 @@
 package org.openhab.binding.aleoncean.internal.worker;
 
 import java.util.concurrent.TimeUnit;
+
 import org.openhab.binding.aleoncean.internal.devices.DeviceContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import eu.aleon.aleoncean.packet.ESP3Packet;
 import eu.aleon.aleoncean.packet.EnOceanId;
 import eu.aleon.aleoncean.packet.RadioPacket;
@@ -62,12 +64,12 @@ public class Worker implements Runnable {
         this.workerQueue = new WorkerQueue();
         this.connector = new USB300();
 
-        this.workerThread = new Thread(null, this, String.format("%s: %s", this.getClass().getCanonicalName(),
-                "worker thread"));
+        this.workerThread = new Thread(null, this,
+                String.format("%s: %s", this.getClass().getCanonicalName(), "worker thread"));
 
         this.reader = new ESP3Reader(connector, workerQueue);
-        this.readerThread = new Thread(null, reader, String.format("%s: %s", this.getClass().getCanonicalName(),
-                "reader thread"));
+        this.readerThread = new Thread(null, reader,
+                String.format("%s: %s", this.getClass().getCanonicalName(), "reader thread"));
 
         this.devices = new DeviceContainer(connector);
     }
@@ -123,11 +125,19 @@ public class Worker implements Runnable {
     @Override
     public void run() {
         while (running) {
+            final WorkerItem workerItem;
+
             try {
                 // Take the next item from the worker queue.
-                final WorkerItem workerItem = workerQueue.take();
-                LOGGER.trace("Received a worker item: {}", workerItem);
+                workerItem = workerQueue.take();
+            } catch (final InterruptedException ex) {
+                // There is nothing to do, but writing a log message.
+                LOGGER.debug("Received an exception while taking element from worker queue.", ex);
+                continue;
+            }
+            LOGGER.trace("Received a worker item: {}", workerItem);
 
+            try {
                 // Inspect received item.
                 if (workerItem instanceof WorkerItemShutdown) {
                     handleWorkerItemShutdown((WorkerItemShutdown) workerItem);
@@ -148,10 +158,9 @@ public class Worker implements Runnable {
                 } else {
                     handleWorkerItem(workerItem);
                 }
-
-            } catch (final InterruptedException ex) {
-                // There is nothing to do, but writing a log message.
-                LOGGER.debug("Received an exception while taking element from worker queue.", ex);
+            } catch (final RuntimeException ex) {
+                LOGGER.error("Catched a runtime exception. The code must be fixed!", ex);
+                continue;
             }
         }
     }
