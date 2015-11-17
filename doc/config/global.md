@@ -1,9 +1,14 @@
 The global configuration is placed in the openhab.cfg file.
 
+For Openhab2 the configuration is residing in <pre>conf/services/aleoncean.cfg</pre> 
+
 # serial port
 
 You have to configure the serial port that should be used to communicate with the hardware.
 <pre>aleoncean:port=/dev/ttyUSB0</pre>
+
+For Openhab2 use the following instead: 
+<pre>port=/dev/ttyUSB0</pre>
 
 # base id
 
@@ -15,3 +20,6 @@ Additional you COULD configure the base ID that should be set.
 
 The base ID could be changed 10 times, then NO further changes could be done. See ESP3, that states this.
 <pre>aleoncean:baseid=FF:80:20:00</pre>
+
+For Openhab2 use 
+<pre>baseid=FF:80:20:00</pre>
